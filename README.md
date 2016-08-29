@@ -1,6 +1,6 @@
 # heroku-buildpack-mimeinfo-perl
 
-This repository is a fork of [github.com/heroku/heroku-buildpack-apt](https://github.com/heroku/heroku-buildpack-apt). It's a Heroku buildpack that is required by [scinote-web](https://github.com/biosistemika/scinote-web) (which uses `mimetype` script) to run properly on Heroku.
+This repository is a fork of [heroku-buildpack-apt](https://github.com/heroku/heroku-buildpack-apt). It's a Heroku buildpack that is required by [scinote-web](https://github.com/biosistemika/scinote-web) (which uses `mimetype` script) to run properly on Heroku.
 
 The buildpack installs the **MimeInfo** Perl library into the Heroku container.
 
