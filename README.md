@@ -1,70 +1,23 @@
-# heroku-buildpack-apt
+# heroku-buildpack-mimeinfo-perl
 
-Add support for apt-based dependencies during both compile and runtime.
+This repository is a fork of [github.com/heroku/heroku-buildpack-apt](https://github.com/heroku/heroku-buildpack-apt). It's a Heroku buildpack that is required by [scinote-web](https://github.com/biosistemika/scinote-web) (which uses `mimetype` script) to run properly on Heroku.
+
+The buildpack installs the **MimeInfo** Perl library into the Heroku container.
+
+## Changes
+
+The buildpack is very similar to the original, there are just couple of changes:
+* in [detect](/bin/detect), there is no checking for `Aptfile` (buildpack always succeeds),
+* in [compile](/bin/compile), required libraries that should be installed via `apt-get` are simply declared in a `$packages` variable, and additional environmental variables are declared towards the end of the file.
 
 ## Usage
 
-This buildpack works best with [heroku-buildpack-multi](https://github.com/ddollar/heroku-buildpack-multi) so that it can be used with your app's existing buildpacks.
+To add this buildpack to Heroku app, simply run the following command:
+```
+heroku buildpacks:add --index <index> https://github.com/biosistemika/heroku-buildpack-mimeinfo-perl.git -a <app>
+```
+Where `<index>` is a 1-based index where the buildpack should be added (e.g. if you already have 2 buildpacks for your app, this index would have value 3 to be appended to the end), and `<app>` is the name of your Heroku app.
 
-Include a list of apt package names to be installed in a file named `Aptfile`
-
-## Example
-
-#### .buildpacks
-
-    https://github.com/ddollar/heroku-buildpack-apt
-    https://github.com/heroku/heroku-buildpack-ruby
-
-#### Aptfile
-
-    libpq-dev
-    http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.1/wkhtmltox-0.12.1_linux-precise-amd64.deb
-
-#### Gemfile
-
-    source "https://rubygems.org"
-    gem "pg"
-    
-### Compile with [Anvil](https://github.com/ddollar/anvil-cli)
-
-    $ heroku plugins:install https://github.com/ddollar/heroku-build
-    
-    $ heroku create apt-pg-test
-    
-    $ heroku build . -b ddollar/multi -r 
-	Checking for app files to sync... done, 2 files needed
-	Uploading: 100.0%
-	Launching build process... done
-	Preparing app for compilation... done
-	Fetching buildpack... done
-	Detecting buildpack... done, Multipack
-	Fetching cache... done
-	Compiling app...
-	=====> Downloading Buildpack: https://github.com/ddollar/heroku-buildpack-apt
-	=====> Detected Framework: Apt
-	  Updating apt caches
-	  ...
-	  Installing libpq-dev_8.4.17-0ubuntu10.04_amd64.deb
-	  Installing libpq5_8.4.17-0ubuntu10.04_amd64.deb
-	  Writing profile script
-	=====> Downloading Buildpack: https://github.com/heroku/heroku-buildpack-ruby
-	=====> Detected Framework: Ruby
-	  Installing dependencies using Bundler version 1.3.2
-	  ...
-	Putting cache... done
-	Creating slug... done
-	Uploading slug... done
-	Success, slug is https://api.anvilworks.org/slugs/00000000-0000-0000-0000-0000000000.tgz
-	
-### Check out the PG library version
-
-    $ heroku run bash -a apt-pg-test
-    ~ $ irb
-	irb(main):001:0> require "pg"
-	=> true
-	irb(main):002:0> PG::version_string
-	=> "PG 0.15.1"
-	
 ## License
 
 MIT
